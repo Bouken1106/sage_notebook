@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  sagemath:
+    build:
+      context: .  # Dockerfile があるディレクトリ
+    image: my-sagemath
+    container_name: sagemath
+    ports:
+      - "8888:8888"  # ホストの8888をコンテナの8888にマッピング
+    environment:
+      - TZ=Asia/Tokyo
+    volumes:
+      - ./:/home/sage/work         # 作業ディレクトリをマウント
+      - ./sage-data:/home/sage/.sage  # 設定などの永続化（任意）
+    platform: linux/amd64  # Apple Silicon 対応（Intelなら削除してOK）
+    command: >
+      sage -n jupyter --ip=0.0.0.0 --port=8888 --no-browser --allow-root
